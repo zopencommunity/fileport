@@ -1,7 +1,7 @@
 # Update bump details accordingly. Use bump check to confirm.
-# bump: file-version /FILE_VERSION="(.*)"/ https://github.com/file/file.git|semver:*
-# FILE_VERSION="V.R.M" # Specify a stable release
-# export ZOPEN_STABLE_TAG="v${FILE_VERSION}"
+# bump: file-version /FILE_VERSION="(.*)"/ http://ftp.astron.com/pub/file/|re:/href="file-([\d.]+).tar.gz"/$1/|semver:*
+FILE_VERSION="5.46" # Specify a stable release
+export ZOPEN_STABLE_TAG="v${FILE_VERSION}"
 
 ###
 ### Build control file for the file port
@@ -15,7 +15,7 @@
 export ZOPEN_BUILD_LINE="STABLE"
 
 ## Required IF ZOPEN_BUILD_LINE='STABLE'
-export ZOPEN_STABLE_URL="http://ftp.astron.com/pub/file/file-5.46.tar.gz"  # Specify the stable build URL (either git or tarball)
+export ZOPEN_STABLE_URL="http://ftp.astron.com/pub/file/file-${FILE_VERSION}.tar.gz"  # Specify the stable build URL (either git or tarball)
 export ZOPEN_STABLE_DEPS="autoconf automake libtool make check_python zlib gzip tar perl m4 openssl" # Specify the stable build dependencies.
 
 ## Required IF ZOPEN_BUILD_LINE='DEV'
@@ -69,7 +69,7 @@ zopen_get_version()
 {
   # Modify to echo the version of your tool/library
   # Rather than hardcoding the version, obtain the version by running the tool/library
-  echo "1.0.0"
+  echo $FILE_VERSION 
 }
 
 
