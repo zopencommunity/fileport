@@ -1,5 +1,5 @@
 diff --git a/configure b/configure
-index cdcdd74..e848c7e 100755
+index cdcdd74..568ac82 100755
 --- a/configure
 +++ b/configure
 @@ -7022,6 +7022,10 @@ openbsd* | bitrig*)
@@ -13,3 +13,18 @@ index cdcdd74..e848c7e 100755
  osf3* | osf4* | osf5*)
    lt_cv_deplibs_check_method=pass_all
    ;;
+@@ -15037,6 +15041,14 @@ rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+        test -z "$ac_type" && break
+      done ;;
+ esac
++fi
++
++  ac_fn_c_check_type "$LINENO" "locale_t" "ac_cv_type_locale_t" "#include <locale.h>"
++if test "x$ac_cv_type_locale_t" = xyes
++then :
++
++printf "%s\n" "#define HAVE_LOCALE_T 1" >>confdefs.h
++
+ fi
+ 
+ 
