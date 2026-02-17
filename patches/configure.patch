@@ -1,12 +1,12 @@
 diff --git a/configure b/configure
-index cdcdd74..568ac82 100755
+index cdcdd74..55e8441 100755
 --- a/configure
 +++ b/configure
 @@ -7022,6 +7022,10 @@ openbsd* | bitrig*)
    fi
    ;;
  
-+openedition)
++openedition*)
 +  lt_cv_deplibs_check_method=pass_all
 +  ;;
 +
