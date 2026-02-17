@@ -1,0 +1,14 @@
+diff --git a/config.h.in b/config.h.in
+index 9391b4e..d70c990 100644
+--- a/config.h.in
++++ b/config.h.in
+@@ -110,6 +110,9 @@
+ /* Define to 1 if you have the 'localtime_r' function. */
+ #undef HAVE_LOCALTIME_R
+ 
++/* Define to 1 if you have the 'locale_t' type. */
++#undef HAVE_LOCALE_T
++
+ /* Define to 1 if you have the <Lrzip.h> header file. */
+ #undef HAVE_LRZIP_H
+ 

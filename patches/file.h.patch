@@ -1,0 +1,24 @@
+diff --git a/src/file.h b/src/file.h
+index 9922632..62aae1e 100644
+--- a/src/file.h
++++ b/src/file.h
+@@ -76,6 +76,10 @@
+ # define INTMAX_T_FORMAT "j"
+ #endif
+ 
++#ifdef __MVS__
++#include <locale.h>
++#endif
++
+ #include <stdio.h>	/* Include that here, to make sure __P gets defined */
+ #include <errno.h>
+ #include <fcntl.h>	/* For open and flags */
+@@ -517,7 +521,7 @@ struct magic_set {
+ #define	FILE_REGEX_MAX			8192
+ #define	FILE_ENCODING_MAX		(64 * 1024)
+ #define	FILE_MAGWARN_MAX		64
+-#if defined(HAVE_NEWLOCALE) && defined(HAVE_USELOCALE) && defined(HAVE_FREELOCALE)
++#if defined(HAVE_NEWLOCALE) && defined(HAVE_USELOCALE) && defined(HAVE_FREELOCALE) && defined(HAVE_LOCALE_T)
+ #define USE_C_LOCALE
+ 	locale_t c_lc_ctype;
+ #define file_locale_used
