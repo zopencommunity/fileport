@@ -43,7 +43,7 @@ export ZOPEN_CONFIGURE="./configure" ## Configuration program to run (defaults t
 #export ZOPEN_INSTALL="skip"   ## Installation program to run (defaults to 'make')
 #export ZOPEN_MAKE="skip"      ## Build program to run (defaults to 'make')
 #export ZOPEN_CLEAN=""         ## Clean up program to run (defaults to 'make')
-
+export USE_ZOSLIB_LOCALE=1
 
 ###
 ### Required user-supplied functions
