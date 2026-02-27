@@ -1,6 +1,6 @@
 # Update bump details accordingly. Use bump check to confirm.
 # bump: file-version /FILE_VERSION="(.*)"/ http://ftp.astron.com/pub/file/|re:/href="file-([\d.]+).tar.gz"/$1/|semver:*
-FILE_VERSION="5.46" # Specify a stable release
+FILE_VERSION="5.47" # Specify a stable release
 export ZOPEN_STABLE_TAG="v${FILE_VERSION}"
 
 ###
