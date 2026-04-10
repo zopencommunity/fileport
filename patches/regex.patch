@@ -1,0 +1,63 @@
+diff --git a/magic/Magdir/c-lang b/magic/Magdir/c-lang
+index 4b203e6..9ce5ac0 100644
+--- a/magic/Magdir/c-lang
++++ b/magic/Magdir/c-lang
+@@ -75,7 +75,7 @@
+ !:mime	text/x-c++
+ # But class alone is reduced to avoid beating php (Jens Schleusener)
+ 0	search/8192	class
+->0	regex	\^[[:space:]]*class[[:space:]]+[[:digit:][:alpha:]:_]+[[:space:]]*\\{(.*[\n]*)*\\}(;)?$		C++ source text
++>0	regex	\^[[:space:]]*class[[:space:]]+[[:digit:][:alpha:]:_]+[[:space:]]*\\{[^}]*\\}(;)?$		C++ source text
+ !:strength + 13
+ !:mime	text/x-c++
+ 0	search/8192	public
+diff --git a/magic/Magdir/commands b/magic/Magdir/commands
+index 4ce9776..4f20fcf 100644
+--- a/magic/Magdir/commands
++++ b/magic/Magdir/commands
+@@ -153,7 +153,7 @@
+ !:mime	text/x-execline
+ 
+ 0	string	#!
+->0	regex	\^#!.*/bin/execlineb([[:space:]].*)*$	execline script text executable
++>0	regex	\^#!.*/bin/execlineb([[:space:]].*)?$	execline script text executable
+ !:mime	text/x-execline
+ 
+ 0	string	#!/nix/store/
+diff --git a/magic/Magdir/perl b/magic/Magdir/perl
+index 4a3756a..2aa4481 100644
+--- a/magic/Magdir/perl
++++ b/magic/Magdir/perl
+@@ -28,7 +28,7 @@
+ 0	string	#!\ /usr/bin/env\ perl	Perl script text executable
+ !:mime	text/x-perl
+ 0	string	#!
+->0	regex	\^#!.*/bin/perl([[:space:]].*)*$	Perl script text executable
++>0	regex	\^#!.*/bin/perl([[:space:]].*)?$	Perl script text executable
+ !:mime	text/x-perl
+ 
+ # by Dmitry V. Levin and Alexey Tourbin
+diff --git a/magic/Magdir/python b/magic/Magdir/python
+index ede1b5b..bd03db1 100644
+--- a/magic/Magdir/python
++++ b/magic/Magdir/python
+@@ -301,7 +301,7 @@
+ 
+ # class name[(base classes,)]: [pass]
+ 0	search/8192	class
+->0	regex	\^class\ [_[:alpha:]]+(\\(.*\\))?(\ )*:([\ \t]+pass)?$		Python script text executable
++>0	regex	\^class\ [_[:alpha:]]+(\([^)]*\))?(\ )*:([\ \t]+pass)?$		Python script text executable
+ !:strength + 15
+ !:mime text/x-script.python
+ 
+diff --git a/magic/Magdir/ruby b/magic/Magdir/ruby
+index 9e67a3e..fb1dc67 100644
+--- a/magic/Magdir/ruby
++++ b/magic/Magdir/ruby
+@@ -51,5 +51,5 @@
+ >0	regex		\^[[:space:]]*require[[:space:]]'[A-Za-z_/.]+'	Ruby script text
+ !:mime	text/x-ruby
+ 0	search/8192	include
+->0 regex 	\^[[:space:]]*include\ ([A-Z]+[a-z]*(::))+	Ruby script text
++>0 regex 	\^[[:space:]]*include\ ([A-Z]+[a-z]*::)+	Ruby script text
+ !:mime	text/x-ruby
