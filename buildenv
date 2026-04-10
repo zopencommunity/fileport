@@ -16,7 +16,7 @@ export ZOPEN_BUILD_LINE="STABLE"
 
 ## Required IF ZOPEN_BUILD_LINE='STABLE'
 export ZOPEN_STABLE_URL="http://ftp.astron.com/pub/file/file-${FILE_VERSION}.tar.gz"  # Specify the stable build URL (either git or tarball)
-export ZOPEN_STABLE_DEPS="autoconf automake libtool make check_python zlib gzip tar perl m4 openssl" # Specify the stable build dependencies.
+export ZOPEN_STABLE_DEPS="make check_python zlib perl" # Specify the stable build dependencies.
 
 ## Required IF ZOPEN_BUILD_LINE='DEV'
 export ZOPEN_DEV_URL="https://github.com/file/file.git"   # Specify the dev build URL
