@@ -1,0 +1,156 @@
+diff --git a/src/file.h b/src/file.h
+index 06cf91d..8ea4797 100644
+--- a/src/file.h
++++ b/src/file.h
+@@ -451,6 +451,58 @@ struct mlist {
+ #define CCAST(T, b)	((T)(uintptr_t)(b))
+ #endif
+ 
++#define BE64(p) ( \
++    (CAST(uint64_t, (p)[0])<<56)| \
++    (CAST(uint64_t, (p)[1])<<48)| \
++    (CAST(uint64_t, (p)[2])<<40)| \
++    (CAST(uint64_t, (p)[3])<<32)| \
++    (CAST(uint64_t, (p)[4])<<24)| \
++    (CAST(uint64_t, (p)[5])<<16)| \
++    (CAST(uint64_t, (p)[6])<<8)| \
++    (CAST(uint64_t, (p)[7])))
++#define LE64(p) ( \
++    (CAST(uint64_t, (p)[7])<<56)| \
++    (CAST(uint64_t, (p)[6])<<48)| \
++    (CAST(uint64_t, (p)[5])<<40)| \
++    (CAST(uint64_t, (p)[4])<<32)| \
++    (CAST(uint64_t, (p)[3])<<24)| \
++    (CAST(uint64_t, (p)[2])<<16)| \
++    (CAST(uint64_t, (p)[1])<<8)| \
++    (CAST(uint64_t, (p)[0])))
++#define LE32(p) ( \
++    (CAST(uint32_t, (p)[3])<<24)| \
++    (CAST(uint32_t, (p)[2])<<16)| \
++    (CAST(uint32_t, (p)[1])<<8)| \
++    (CAST(uint32_t, (p)[0])))
++#define BE32(p) ( \
++    (CAST(uint32_t, (p)[0])<<24)| \
++    (CAST(uint32_t, (p)[1])<<16)| \
++    (CAST(uint32_t, (p)[2])<<8)| \
++    (CAST(uint32_t, (p)[3])))
++#define ME32(p) ( \
++    (CAST(uint32_t, (p)[1])<<24)| \
++    (CAST(uint32_t, (p)[0])<<16)| \
++    (CAST(uint32_t, (p)[3])<<8)| \
++    (CAST(uint32_t, (p)[2])))
++
++#define BE16(p) ((CAST(uint16_t, (p)[0])<<8)|(CAST(uint16_t, (p)[1])))
++#define LE16(p) ((CAST(uint16_t, (p)[1])<<8)|(CAST(uint16_t, (p)[0])))
++#define SEXT(s,v,p) ((s) ? \
++	CAST(intmax_t, CAST(int##v##_t, p)) : \
++	CAST(intmax_t, CAST(uint##v##_t, p)))
++
++#define H2LE32(p, v) do { \
++    CAST(uint8_t *, (p))[0] = CAST(uint8_t, (v) >> 0); \
++    CAST(uint8_t *, (p))[1] = CAST(uint8_t, (v) >> 8); \
++    CAST(uint8_t *, (p))[2] = CAST(uint8_t, (v) >> 16); \
++    CAST(uint8_t *, (p))[3] = CAST(uint8_t, (v) >> 24); \
++} while (/*CONSTCOND*/0)
++
++#define H2LE16(p, v) do { \
++    CAST(uint8_t *, (p))[0] = CAST(uint8_t, (v) >> 0); \
++    CAST(uint8_t *, (p))[1] = CAST(uint8_t, (v) >> 8); \
++} while (/*CONSTCOND*/0)
++
+ struct level_info {
+ 	int32_t off;
+ 	int got_match;
+diff --git a/src/funcs.c b/src/funcs.c
+index fa62b26..8f79070 100644
+--- a/src/funcs.c
++++ b/src/funcs.c
+@@ -893,13 +893,13 @@ getxvalue(void *p, const char *s, size_t n)
+ 	}
+ 	switch (n) {
+ 	case 8:
+-		*(uint32_t *)p = v;
++		H2LE32(p, v);
+ 		return 1;
+ 	case 4:
+-		*(uint16_t *)p = v;
++		H2LE16(p, v);
+ 		return 1;
+ 	case 2:
+-		*(uint8_t *)p = v;
++		*(uint8_t *)p = CAST(uint8_t, v);
+ 		return 1;
+ 	default:
+ 		return 0;
+@@ -943,13 +943,19 @@ file_print_guid(char *str, size_t len, const uint64_t *guid)
+ #ifndef WIN32
+ 	return snprintf(str, len, "%.8X-%.4hX-%.4hX-%.2hhX%.2hhX-"
+ 	    "%.2hhX%.2hhX%.2hhX%.2hhX%.2hhX%.2hhX",
+-	    g->data1, g->data2, g->data3, g->data4[0], g->data4[1],
++	    LE32(CAST(const uint8_t *, &g->data1)),
++	    LE16(CAST(const uint8_t *, &g->data2)),
++	    LE16(CAST(const uint8_t *, &g->data3)),
++	    g->data4[0], g->data4[1],
+ 	    g->data4[2], g->data4[3], g->data4[4], g->data4[5],
+ 	    g->data4[6], g->data4[7]);
+ #else
+ 	return snprintf(str, len, "%.8X-%.4hX-%.4hX-%.2hX%.2hX-"
+ 	    "%.2hX%.2hX%.2hX%.2hX%.2hX%.2hX",
+-	    g->data1, g->data2, g->data3, g->data4[0], g->data4[1],
++	    LE32(CAST(const uint8_t *, &g->data1)),
++	    LE16(CAST(const uint8_t *, &g->data2)),
++	    LE16(CAST(const uint8_t *, &g->data3)),
++	    g->data4[0], g->data4[1],
+ 	    g->data4[2], g->data4[3], g->data4[4], g->data4[5],
+ 	    g->data4[6], g->data4[7]);
+ #endif
+diff --git a/src/softmagic.c b/src/softmagic.c
+index 54ebcde..a6f2b30 100644
+--- a/src/softmagic.c
++++ b/src/softmagic.c
+@@ -70,45 +70,6 @@ file_private int cvt_32(union VALUETYPE *, const struct magic *);
+ file_private int cvt_64(union VALUETYPE *, const struct magic *);
+ 
+ #define OFFSET_OOB(n, o, i)	((n) < CAST(uint32_t, (o)) || (i) > ((n) - (o)))
+-#define BE64(p) ( \
+-    (CAST(uint64_t, (p)[0])<<56)| \
+-    (CAST(uint64_t, (p)[1])<<48)| \
+-    (CAST(uint64_t, (p)[2])<<40)| \
+-    (CAST(uint64_t, (p)[3])<<32)| \
+-    (CAST(uint64_t, (p)[4])<<24)| \
+-    (CAST(uint64_t, (p)[5])<<16)| \
+-    (CAST(uint64_t, (p)[6])<<8)| \
+-    (CAST(uint64_t, (p)[7])))
+-#define LE64(p) ( \
+-    (CAST(uint64_t, (p)[7])<<56)| \
+-    (CAST(uint64_t, (p)[6])<<48)| \
+-    (CAST(uint64_t, (p)[5])<<40)| \
+-    (CAST(uint64_t, (p)[4])<<32)| \
+-    (CAST(uint64_t, (p)[3])<<24)| \
+-    (CAST(uint64_t, (p)[2])<<16)| \
+-    (CAST(uint64_t, (p)[1])<<8)| \
+-    (CAST(uint64_t, (p)[0])))
+-#define LE32(p) ( \
+-    (CAST(uint32_t, (p)[3])<<24)| \
+-    (CAST(uint32_t, (p)[2])<<16)| \
+-    (CAST(uint32_t, (p)[1])<<8)| \
+-    (CAST(uint32_t, (p)[0])))
+-#define BE32(p) ( \
+-    (CAST(uint32_t, (p)[0])<<24)| \
+-    (CAST(uint32_t, (p)[1])<<16)| \
+-    (CAST(uint32_t, (p)[2])<<8)| \
+-    (CAST(uint32_t, (p)[3])))
+-#define ME32(p) ( \
+-    (CAST(uint32_t, (p)[1])<<24)| \
+-    (CAST(uint32_t, (p)[0])<<16)| \
+-    (CAST(uint32_t, (p)[3])<<8)| \
+-    (CAST(uint32_t, (p)[2])))
+-
+-#define BE16(p) ((CAST(uint16_t, (p)[0])<<8)|(CAST(uint16_t, (p)[1])))
+-#define LE16(p) ((CAST(uint16_t, (p)[1])<<8)|(CAST(uint16_t, (p)[0])))
+-#define SEXT(s,v,p) ((s) ? \
+-	CAST(intmax_t, CAST(int##v##_t, p)) : \
+-	CAST(intmax_t, CAST(uint##v##_t, p)))
+ 
+ /*
+  * softmagic - lookup one file in parsed, in-memory copy of database
