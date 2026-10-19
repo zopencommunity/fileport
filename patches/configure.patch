@@ -1,8 +1,8 @@
 diff --git a/configure b/configure
-index cdcdd74..e848c7e 100755
+index 0328a41..ff7300a 100755
 --- a/configure
 +++ b/configure
-@@ -7022,6 +7022,10 @@ openbsd* | bitrig*)
+@@ -7274,6 +7274,10 @@ openbsd* | bitrig*)
    fi
    ;;
  

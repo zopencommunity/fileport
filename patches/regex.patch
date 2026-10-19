@@ -1,5 +1,5 @@
 diff --git a/magic/Magdir/c-lang b/magic/Magdir/c-lang
-index 4b203e6..9ce5ac0 100644
+index 7a2fdb4..bff4f04 100644
 --- a/magic/Magdir/c-lang
 +++ b/magic/Magdir/c-lang
 @@ -75,7 +75,7 @@
@@ -51,12 +51,12 @@ index ede1b5b..bd03db1 100644
  !:mime text/x-script.python
  
 diff --git a/magic/Magdir/ruby b/magic/Magdir/ruby
-index 9e67a3e..fb1dc67 100644
+index 59a93e2..b8b9410 100644
 --- a/magic/Magdir/ruby
 +++ b/magic/Magdir/ruby
-@@ -51,5 +51,5 @@
- >0	regex		\^[[:space:]]*require[[:space:]]'[A-Za-z_/.]+'	Ruby script text
+@@ -48,5 +48,5 @@
  !:mime	text/x-ruby
+ 
  0	search/8192	include
 ->0 regex 	\^[[:space:]]*include\ ([A-Z]+[a-z]*(::))+	Ruby script text
 +>0 regex 	\^[[:space:]]*include\ ([A-Z]+[a-z]*::)+	Ruby script text
